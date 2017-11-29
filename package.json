@@ -1,0 +1,37 @@
+{
+  "name": "@nlib/ast-to-string",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.0.1",
+  "description": "Generate code from ast.",
+  "author": {
+    "name": "Kei Ito",
+    "email": "kei.itof@gmail.com",
+    "url": "https://github.com/kei-ito"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6"
+  },
+  "repository": "nlibjs/ast-to-string",
+  "main": "dist/index.js",
+  "scripts": {
+    "eslint": "eslint --max-warnings 0 lib/ test/*/*",
+    "build": "rollup -c .rollup.config.js",
+    "pretest": "npm run build",
+    "test": "node test && npm run eslint",
+    "prepare": "npm test"
+  },
+  "devDependencies": {
+    "@nlib/lint": "^0.1.2",
+    "@nlib/test": "^1.0.2",
+    "acorn": "^5.2.1",
+    "eslint": "^4.12.0",
+    "rollup": "^0.52.0",
+    "rollup-plugin-multi-entry": "^2.0.2"
+  },
+  "dependencies": {
+    "@nlib/noop": "^1.0.0"
+  }
+}

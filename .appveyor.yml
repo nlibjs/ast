@@ -8,11 +8,8 @@ install:
 - ps: Install-Product node $env:nodejs_version
 - node --version
 - npm --version
-- npm install -g eslint istanbul
 - npm install
 test_script:
-# - istanbul cover test
-# - npm run eslint
 - npm test
 on_success:
 - npm install -g codecov

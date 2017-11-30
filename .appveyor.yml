@@ -10,7 +10,7 @@ install:
 - npm --version
 - npm install
 test_script:
-- npm test
+- npm run test_coverage
 on_success:
 - npm install -g codecov
 - codecov

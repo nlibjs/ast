@@ -18,11 +18,13 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "nlib-lint src test",
-    "test": "node test && npm run lint"
+    "test": "node test && npm run lint",
+    "test_coverage": "istanbul cover test && npm run lint"
   },
   "devDependencies": {
     "@nlib/lint": "^0.2.1",
-    "acorn": "^5.2.1"
+    "acorn": "^5.2.1",
+    "istanbul": "^0.4.5"
   },
   "dependencies": {
     "@nlib/noop": "^1.0.0"

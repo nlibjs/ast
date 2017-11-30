@@ -19,7 +19,7 @@
   "scripts": {
     "lint": "nlib-lint src test",
     "test": "node test && npm run lint",
-    "test_coverage": "istanbul cover test && npm run lint"
+    "test_coverage": "istanbul cover test"
   },
   "devDependencies": {
     "@nlib/lint": "^0.2.1",

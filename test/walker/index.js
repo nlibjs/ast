@@ -1,59 +1,45 @@
-import assert from 'assert';
-import acorn from 'acorn';
-import test from '@nlib/test';
-import walker from '../../src/walker/index.js';
-import types from '../types/index.js';
-import walkerTests from '../walker-tests/index.js';
+const assert = require('assert');
+const console = require('console');
+const acorn = require('acorn');
+const types = require('../types');
+const walkerTests = require('../walker-tests');
+const {walker} = require('../..');
 
-test('walker', (test) => {
+const coverage = new Map(
+	types
+	.map((type) => {
+		return [type, 0];
+	})
+);
 
-	const coverage = new Map(
-		types
-		.map((type) => {
-			return [type, 0];
-		})
+for (const [code, expectedNodes, options] of walkerTests) {
+	const ast = acorn.parse(
+		code,
+		Object.assign(
+			{
+				ecmaVersion: 8,
+				sourceType: 'module',
+			},
+			options
+		)
 	);
-
-	for (const [code, expectedNodes, options] of walkerTests) {
-		test(code, (test) => {
-			const ast = acorn.parse(
-				code,
-				Object.assign(
-					{
-						ecmaVersion: 8,
-						sourceType: 'module',
-					},
-					options
-				)
-			);
-			let count = 0;
-			for (const node of walker(ast)) {
-				const expected = expectedNodes[count++];
-				if (node) {
-					const {type} = node;
-					coverage.set(type, coverage.get(type) + 1);
-					test(`${count} ${type}`, (test) => {
-						for (const key of Object.keys(expected)) {
-							test(`${key}: ${node[key]}`, () => {
-								assert.deepEqual(node[key], expected[key]);
-							});
-						}
-					});
-				} else {
-					test(`${node}`, () => {
-						assert.equal(node, expected);
-					});
-				}
+	let count = 0;
+	for (const node of walker(ast)) {
+		const expected = expectedNodes[count++];
+		if (node) {
+			const {type} = node;
+			coverage.set(type, coverage.get(type) + 1);
+			for (const key of Object.keys(expected)) {
+				assert.deepEqual(node[key], expected[key]);
 			}
-		});
-	}
-
-	test('coverage', (test) => {
-		for (const [type, count] of coverage) {
-			test(`${type}: ${count}`, () => {
-				assert(0 < count);
-			});
+		} else {
+			assert.equal(node, expected);
 		}
-	});
+	}
+}
 
-});
+for (const [type, count] of coverage) {
+	assert(0 < count, `${type} is not covered`);
+}
+
+console.log('done');

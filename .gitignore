@@ -2,4 +2,3 @@ node_modules
 coverage
 temp
 dist
-test/index.js

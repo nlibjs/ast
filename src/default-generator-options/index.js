@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 	AwaitExpression: {
 		'await': 'await ',
 	},

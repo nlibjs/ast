@@ -1,10 +1,10 @@
-import {Readable} from 'stream';
-import generator from '../generator/index.js';
+const {Readable} = require('stream');
+const {generator} = require('..');
 
-export default class Generator extends Readable {
+class Generator extends Readable {
 
-	constructor(ast) {
-		super().generator = generator(ast);
+	constructor(ast, options) {
+		super().generator = generator(ast, options);
 	}
 
 	_read() {
@@ -15,3 +15,5 @@ export default class Generator extends Readable {
 	}
 
 }
+
+module.exports = Generator;

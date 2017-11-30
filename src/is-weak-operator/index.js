@@ -1,6 +1,6 @@
-import precedences from '../precedences/index.js';
+const precedences = require('../precedences');
 
-export default function isWeakOperator(operator1, operator2) {
+function isWeakOperator(operator1, operator2) {
 	if (!operator1) {
 		return false;
 	} else if (!operator2) {
@@ -8,3 +8,5 @@ export default function isWeakOperator(operator1, operator2) {
 	}
 	return precedences[operator1] < precedences[operator2];
 }
+
+module.exports = isWeakOperator;

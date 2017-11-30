@@ -1,4 +1,4 @@
-export default {
+module.exports = {
 	'||': 5,
 	'&&': 6,
 	'|': 7,

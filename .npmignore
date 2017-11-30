@@ -1,1 +1,2 @@
-./node_modules/@nlib/lint/package-npmignore
+.*
+/test

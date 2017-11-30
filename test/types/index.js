@@ -1,4 +1,4 @@
-import {base} from 'acorn/dist/walk';
+const {base} = require('acorn/dist/walk');
 
 const groups = new Set([
 	'Class',
@@ -13,7 +13,7 @@ const groups = new Set([
 	'VariablePattern',
 ]);
 
-export default [
+module.exports = [
 	...Object.keys(base),
 	'ClassBody',
 	'ExportSpecifier',

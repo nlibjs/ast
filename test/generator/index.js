@@ -33,4 +33,4 @@ for (const [type, count] of coverage) {
 	assert(0 < count, `${type} is not covered`);
 }
 
-console.log('done');
+console.log('passed: generator');

@@ -26,7 +26,5 @@
     "acorn": "^5.2.1",
     "istanbul": "^0.4.5"
   },
-  "dependencies": {
-    "@nlib/noop": "^1.0.0"
-  }
+  "dependencies": {}
 }

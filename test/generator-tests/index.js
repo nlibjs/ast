@@ -70,6 +70,7 @@ module.exports = {
 		['foo={foo:bar,bar}'],
 		['foo={foo:bar,bar,baz(){},foobar:function(){}}'],
 		['foo={foo:bar,bar,baz(){},foobar:function(){},get qux(){},set qux(foo){}}'],
+		['foo={foo:bar,bar,baz(){},foobar:function(){},get qux(){},set qux(foo){},[1+2]:foo,get [3*4](){}}'],
 		['const {foo}=2'],
 		['const {foo,bar=0}=2'],
 		['const {foo,bar=0,baz:{foobar=1}}=2'],

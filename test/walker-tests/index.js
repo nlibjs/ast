@@ -355,6 +355,20 @@ module.exports = [
 		],
 	],
 	[
+		'({foo:bar,[1]:bar})',
+		[
+			{type: 'Program'},
+			{type: 'ExpressionStatement'},
+			{type: 'ObjectExpression'},
+			{type: 'Property', computed: false},
+			{type: 'Identifier', name: 'foo'},
+			{type: 'Identifier', name: 'bar'},
+			{type: 'Property', computed: true},
+			{type: 'Literal', value: 1},
+			{type: 'Identifier', name: 'bar'},
+		],
+	],
+	[
 		'({foo}={bar})',
 		[
 			{type: 'Program'},

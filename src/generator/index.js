@@ -318,13 +318,21 @@ function* generator(node, ancestors, options) {
 		break;
 	case 'Property':
 		if (node.kind !== 'init') {
+			// set, get, etc.
 			yield reserved(node.kind);
+		}
+		if (node.computed) {
+			yield reserved('[');
 			yield* gen('key');
-		} else if (node.method) {
-			yield* gen('key');
+			yield reserved(']');
+			if (node.value.type !== 'FunctionExpression') {
+				yield reserved(':');
+			}
 		} else if (!node.shorthand) {
 			yield* gen('key');
-			yield reserved(':');
+			if (!node.method && node.kind === 'init') {
+				yield reserved(':');
+			}
 		}
 		yield* gen('value');
 		break;

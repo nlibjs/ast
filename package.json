@@ -1,10 +1,10 @@
 {
-  "name": "@nlib/ast-to-string",
+  "name": "@nlib/ast",
   "publishConfig": {
     "access": "public"
   },
   "version": "0.1.0",
-  "description": "Generate code from ast.",
+  "description": "Toolset for manipulating AST.",
   "author": {
     "name": "Kei Ito",
     "email": "kei.itof@gmail.com",
@@ -14,7 +14,7 @@
   "engines": {
     "node": ">=6"
   },
-  "repository": "nlibjs/ast-to-string",
+  "repository": "nlibjs/ast",
   "main": "src/index.js",
   "scripts": {
     "lint": "nlib-lint src test",

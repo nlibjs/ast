@@ -65,6 +65,7 @@ module.exports = {
 		['class Foo{async foo(){}}'],
 		['class Foo{get foo(){}}'],
 		['class Foo{set foo(foo){}}'],
+		['class Foo{set foo(foo){1;2;3}}'],
 		['new Foo(foo)'],
 		['foo={foo:bar}'],
 		['foo={foo:bar,bar}'],

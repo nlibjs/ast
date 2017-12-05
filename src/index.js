@@ -11,5 +11,3 @@ exports.generator = function* (node, options = {}) {
 	}
 	yield* generator(node, [], options);
 };
-
-exports.Generator = require('./-generator');

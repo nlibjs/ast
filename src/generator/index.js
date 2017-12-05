@@ -41,7 +41,7 @@ function* generator(node, ancestors, options) {
 		break;
 	case 'BlockStatement':
 		yield reserved('{');
-		yield* array('body');
+		yield* array('body', reserved(';'));
 		yield reserved('}');
 		break;
 	case 'BinaryExpression':

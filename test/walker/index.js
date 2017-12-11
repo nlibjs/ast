@@ -42,4 +42,23 @@ for (const [type, count] of coverage) {
 	assert(0 < count, `${type} is not covered`);
 }
 
+assert.throws(() => {
+	const nodes = [];
+	for (const node of walker({type: 'Foo'})) {
+		nodes.push(node);
+	}
+});
+
+for (const node of walker(
+	{type: 'Literal'},
+	{
+		Literal(node) {
+			node.foo = 'foo';
+			return node;
+		},
+	}
+)) {
+	assert.equal(node.foo, 'foo');
+}
+
 console.log('passed: walker');

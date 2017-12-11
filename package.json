@@ -19,12 +19,12 @@
   "scripts": {
     "lint": "nlib-lint src test",
     "test": "node test && npm run lint",
-    "test_coverage": "istanbul cover test"
+    "test_coverage": "nyc --reporter=lcov --reporter=text npm test"
   },
   "devDependencies": {
     "@nlib/lint": "^0.2.1",
     "acorn": "^5.2.1",
-    "istanbul": "^0.4.5"
+    "nyc": "^11.3.0"
   },
   "dependencies": {}
 }

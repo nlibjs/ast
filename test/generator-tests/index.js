@@ -1,4 +1,19 @@
 module.exports = {
+	others: [
+		[
+			'0+1',
+			{
+				Literal: {
+					filter(node) {
+						node.value += 1;
+						node.raw = JSON.stringify(node.value);
+						return node;
+					},
+				},
+			},
+			'1+2',
+		],
+	],
 	simple: [
 		[''],
 		['[]'],
@@ -46,6 +61,7 @@ module.exports = {
 		['if(0){}'],
 		['if(0){}else;'],
 		['if(0){}else{}'],
+		['import \'foo\''],
 		['import foo from \'foo\''],
 		['import * as foo from \'foo\''],
 		['import {foo} from \'foo\''],
@@ -63,6 +79,8 @@ module.exports = {
 		['class Foo{foo(){}}'],
 		['class Foo{*foo(){}}'],
 		['class Foo{async foo(){}}'],
+		['class Foo{static foo(){}}'],
+		['class Foo{static async foo(){}}'],
 		['class Foo{get foo(){}}'],
 		['class Foo{set foo(foo){}}'],
 		['class Foo{set foo(foo){1;2;3}}'],
@@ -77,6 +95,7 @@ module.exports = {
 		['const {foo,bar=0,baz:{foobar=1}}=2'],
 		['(0)', {preserveParens: true}],
 		['[...foo]=0'],
+		['function foo(){return}'],
 		['function foo(){return bar}'],
 		['foo(...bar)'],
 		['foo,bar'],
@@ -100,5 +119,24 @@ module.exports = {
 		['function* foo(){yield bar}'],
 		['function* foo(){yield* bar}'],
 		['((1+2)*(3-4)+5)*6**(7+8)'],
+	],
+	invalid: [
+		[{type: 'Foo'}],
+		[
+			{
+				type: 'UnaryExpression',
+				prefix: true,
+				operator: '-',
+				argument: {
+					type: 'Literal',
+					value: 1,
+				},
+			},
+			{
+				UnaryExpression: {
+					'-': 1,
+				},
+			},
+		],
 	],
 };

@@ -1,4 +1,4 @@
-function* walker(node, ancestors, options) {
+function* walker(node, options, ancestors) {
 	if (!node) {
 		return;
 	}
@@ -10,21 +10,21 @@ function* walker(node, ancestors, options) {
 	switch (type) {
 	case 'ArrayExpression':
 	case 'ArrayPattern':
-		yield* arrayWalker(node.elements, nextAncestors, options);
+		yield* arrayWalker(node.elements, options, nextAncestors);
 		break;
 	case 'ArrowFunctionExpression':
 	case 'FunctionDeclaration':
 	case 'FunctionExpression':
-		yield* walker(node.id, nextAncestors, options);
-		yield* arrayWalker(node.params, nextAncestors, options);
-		yield* walker(node.body, nextAncestors, options);
+		yield* walker(node.id, options, nextAncestors);
+		yield* arrayWalker(node.params, options, nextAncestors);
+		yield* walker(node.body, options, nextAncestors);
 		break;
 	case 'AssignmentExpression':
 	case 'AssignmentPattern':
 	case 'BinaryExpression':
 	case 'LogicalExpression':
-		yield* walker(node.left, nextAncestors, options);
-		yield* walker(node.right, nextAncestors, options);
+		yield* walker(node.left, options, nextAncestors);
+		yield* walker(node.right, options, nextAncestors);
 		break;
 	case 'AwaitExpression':
 	case 'RestElement':
@@ -34,37 +34,37 @@ function* walker(node, ancestors, options) {
 	case 'UnaryExpression':
 	case 'UpdateExpression':
 	case 'YieldExpression':
-		yield* walker(node.argument, nextAncestors, options);
+		yield* walker(node.argument, options, nextAncestors);
 		break;
 	case 'BlockStatement':
 	case 'ClassBody':
 	case 'Program':
-		yield* arrayWalker(node.body, nextAncestors, options);
+		yield* arrayWalker(node.body, options, nextAncestors);
 		break;
 	case 'BreakStatement':
 	case 'ContinueStatement':
-		yield* walker(node.label, nextAncestors, options);
+		yield* walker(node.label, options, nextAncestors);
 		break;
 	case 'CallExpression':
 	case 'NewExpression':
-		yield* walker(node.callee, nextAncestors, options);
-		yield* arrayWalker(node.arguments, nextAncestors, options);
+		yield* walker(node.callee, options, nextAncestors);
+		yield* arrayWalker(node.arguments, options, nextAncestors);
 		break;
 	case 'CatchClause':
-		yield* walker(node.param, nextAncestors, options);
-		yield* walker(node.body, nextAncestors, options);
+		yield* walker(node.param, options, nextAncestors);
+		yield* walker(node.body, options, nextAncestors);
 		break;
 	case 'ClassDeclaration':
 	case 'ClassExpression':
-		yield* walker(node.id, nextAncestors, options);
-		yield* walker(node.superClass, nextAncestors, options);
-		yield* walker(node.body, nextAncestors, options);
+		yield* walker(node.id, options, nextAncestors);
+		yield* walker(node.superClass, options, nextAncestors);
+		yield* walker(node.body, options, nextAncestors);
 		break;
 	case 'ConditionalExpression':
 	case 'IfStatement':
-		yield* walker(node.test, nextAncestors, options);
-		yield* walker(node.consequent, nextAncestors, options);
-		yield* walker(node.alternate, nextAncestors, options);
+		yield* walker(node.test, options, nextAncestors);
+		yield* walker(node.consequent, options, nextAncestors);
+		yield* walker(node.alternate, options, nextAncestors);
 		break;
 	case 'DebuggerStatement':
 	case 'EmptyStatement':
@@ -76,118 +76,118 @@ function* walker(node, ancestors, options) {
 	case 'ThisExpression':
 		break;
 	case 'DoWhileStatement':
-		yield* walker(node.body, nextAncestors, options);
-		yield* walker(node.test, nextAncestors, options);
+		yield* walker(node.body, options, nextAncestors);
+		yield* walker(node.test, options, nextAncestors);
 		break;
 	case 'ExportAllDeclaration':
-		yield* walker(node.source, nextAncestors, options);
+		yield* walker(node.source, options, nextAncestors);
 		break;
 	case 'ExportDefaultDeclaration':
-		yield* walker(node.declaration, nextAncestors, options);
+		yield* walker(node.declaration, options, nextAncestors);
 		break;
 	case 'ExportNamedDeclaration':
-		yield* walker(node.declaration, nextAncestors, options);
-		yield* arrayWalker(node.specifiers, nextAncestors, options);
-		yield* walker(node.source, nextAncestors, options);
+		yield* walker(node.declaration, options, nextAncestors);
+		yield* arrayWalker(node.specifiers, options, nextAncestors);
+		yield* walker(node.source, options, nextAncestors);
 		break;
 	case 'ExportSpecifier':
-		yield* walker(node.local, nextAncestors, options);
-		// yield* walker(node.exported, nextAncestors, options);
+		yield* walker(node.local, options, nextAncestors);
+		// yield* walker(node.exported, options, nextAncestors);
 		break;
 	case 'ExpressionStatement':
 	case 'ParenthesizedExpression':
-		yield* walker(node.expression, nextAncestors, options);
+		yield* walker(node.expression, options, nextAncestors);
 		break;
 	case 'ForInStatement':
 	case 'ForOfStatement':
-		yield* walker(node.left, nextAncestors, options);
-		yield* walker(node.right, nextAncestors, options);
-		yield* walker(node.body, nextAncestors, options);
+		yield* walker(node.left, options, nextAncestors);
+		yield* walker(node.right, options, nextAncestors);
+		yield* walker(node.body, options, nextAncestors);
 		break;
 	case 'ForStatement':
-		yield* walker(node.init, nextAncestors, options);
-		yield* walker(node.test, nextAncestors, options);
-		yield* walker(node.update, nextAncestors, options);
-		yield* walker(node.body, nextAncestors, options);
+		yield* walker(node.init, options, nextAncestors);
+		yield* walker(node.test, options, nextAncestors);
+		yield* walker(node.update, options, nextAncestors);
+		yield* walker(node.body, options, nextAncestors);
 		break;
 	case 'ImportDeclaration':
-		yield* arrayWalker(node.specifiers, nextAncestors, options);
-		yield* walker(node.source, nextAncestors, options);
+		yield* arrayWalker(node.specifiers, options, nextAncestors);
+		yield* walker(node.source, options, nextAncestors);
 		break;
 	case 'ImportDefaultSpecifier':
 	case 'ImportNamespaceSpecifier':
-		yield* walker(node.local, nextAncestors, options);
+		yield* walker(node.local, options, nextAncestors);
 		break;
 	case 'ImportSpecifier':
-		// yield* walker(node.imported, nextAncestors, options);
-		yield* walker(node.local, nextAncestors, options);
+		// yield* walker(node.imported, options, nextAncestors);
+		yield* walker(node.local, options, nextAncestors);
 		break;
 	case 'LabeledStatement':
-		yield* walker(node.label, nextAncestors, options);
-		yield* walker(node.body, nextAncestors, options);
+		yield* walker(node.label, options, nextAncestors);
+		yield* walker(node.body, options, nextAncestors);
 		break;
 	case 'MemberExpression':
-		yield* walker(node.object, nextAncestors, options);
-		yield* walker(node.property, nextAncestors, options);
+		yield* walker(node.object, options, nextAncestors);
+		yield* walker(node.property, options, nextAncestors);
 		break;
 	case 'MethodDefinition':
 	case 'Property':
-		yield* walker(node.key, nextAncestors, options);
-		yield* walker(node.value, nextAncestors, options);
+		yield* walker(node.key, options, nextAncestors);
+		yield* walker(node.value, options, nextAncestors);
 		break;
 	case 'ObjectExpression':
 	case 'ObjectPattern':
-		yield* arrayWalker(node.properties, nextAncestors, options);
+		yield* arrayWalker(node.properties, options, nextAncestors);
 		break;
 	case 'SequenceExpression':
-		yield* arrayWalker(node.expressions, nextAncestors, options);
+		yield* arrayWalker(node.expressions, options, nextAncestors);
 		break;
 	case 'SwitchCase':
-		yield* walker(node.test, nextAncestors, options);
-		yield* arrayWalker(node.consequent, nextAncestors, options);
+		yield* walker(node.test, options, nextAncestors);
+		yield* arrayWalker(node.consequent, options, nextAncestors);
 		break;
 	case 'SwitchStatement':
-		yield* walker(node.discriminant, nextAncestors, options);
-		yield* arrayWalker(node.cases, nextAncestors, options);
+		yield* walker(node.discriminant, options, nextAncestors);
+		yield* arrayWalker(node.cases, options, nextAncestors);
 		break;
 	case 'TaggedTemplateExpression':
-		yield* walker(node.tag, nextAncestors, options);
-		yield* walker(node.quasi, nextAncestors, options);
+		yield* walker(node.tag, options, nextAncestors);
+		yield* walker(node.quasi, options, nextAncestors);
 		break;
 	case 'TemplateLiteral':
 		for (let i = 0; i < node.quasis.length; i++) {
-			yield* walker(node.quasis[i], nextAncestors, options);
-			yield* walker(node.expressions[i], nextAncestors, options);
+			yield* walker(node.quasis[i], options, nextAncestors);
+			yield* walker(node.expressions[i], options, nextAncestors);
 		}
 		break;
 	case 'TryStatement':
-		yield* walker(node.block, nextAncestors, options);
-		yield* walker(node.handler, nextAncestors, options);
-		yield* walker(node.finalizer, nextAncestors, options);
+		yield* walker(node.block, options, nextAncestors);
+		yield* walker(node.handler, options, nextAncestors);
+		yield* walker(node.finalizer, options, nextAncestors);
 		break;
 	case 'VariableDeclaration':
-		yield* arrayWalker(node.declarations, nextAncestors, options);
+		yield* arrayWalker(node.declarations, options, nextAncestors);
 		break;
 	case 'VariableDeclarator':
-		yield* walker(node.id, nextAncestors, options);
-		yield* walker(node.init, nextAncestors, options);
+		yield* walker(node.id, options, nextAncestors);
+		yield* walker(node.init, options, nextAncestors);
 		break;
 	case 'WhileStatement':
-		yield* walker(node.test, nextAncestors, options);
-		yield* walker(node.body, nextAncestors, options);
+		yield* walker(node.test, options, nextAncestors);
+		yield* walker(node.body, options, nextAncestors);
 		break;
 	case 'WithStatement':
-		yield* walker(node.object, nextAncestors, options);
-		yield* walker(node.body, nextAncestors, options);
+		yield* walker(node.object, options, nextAncestors);
+		yield* walker(node.body, options, nextAncestors);
 		break;
 	default:
 		throw new Error(`Unknown type: ${node.type}`);
 	}
 }
 
-function* arrayWalker(nodes, nextAncestors, options) {
+function* arrayWalker(nodes, options, nextAncestors) {
 	for (const node of nodes) {
-		yield* walker(node, nextAncestors, options);
+		yield* walker(node, options, nextAncestors);
 	}
 }
 

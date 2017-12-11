@@ -1,7 +1,7 @@
 const console = require('console');
 const isWeakOperator = require('../is-weak-operator');
 
-function* generator(node, ancestors, options) {
+function* generator(node, options, ancestors) {
 	if (!node) {
 		return;
 	}
@@ -230,7 +230,7 @@ function* generator(node, ancestors, options) {
 			let i = 0;
 			let named = false;
 			if (node.specifiers[0].type === 'ImportDefaultSpecifier') {
-				yield* generator(node.specifiers[0], nextAncestors, options);
+				yield* generator(node.specifiers[0], options, nextAncestors);
 				i = 1;
 			}
 			while (i < length) {
@@ -243,10 +243,8 @@ function* generator(node, ancestors, options) {
 						yield reserved('{');
 						named = true;
 					}
-				} else if (named) {
-					yield reserved('}');
 				}
-				yield* generator(specifier, nextAncestors, options);
+				yield* generator(specifier, options, nextAncestors);
 			}
 			if (named) {
 				yield reserved('}');
@@ -390,13 +388,13 @@ function* generator(node, ancestors, options) {
 		break;
 	case 'TemplateLiteral':
 		yield reserved('`');
-		yield* generator(node.quasis[0], ancestors, options);
+		yield* generator(node.quasis[0], options, nextAncestors);
 		temp = 1;
 		for (const expression of node.expressions) {
 			yield reserved('${');
-			yield* generator(expression, ancestors, options);
+			yield* generator(expression, options, nextAncestors);
 			yield reserved('}');
-			yield* generator(node.quasis[temp++], ancestors, options);
+			yield* generator(node.quasis[temp++], options, nextAncestors);
 		}
 		yield reserved('`');
 		break;
@@ -480,16 +478,16 @@ function* generator(node, ancestors, options) {
 
 	function* array(key, between = '') {
 		const nodes = node[key];
-		yield* generator(nodes[0], nextAncestors, options);
+		yield* generator(nodes[0], options, nextAncestors);
 		const {length} = nodes;
 		for (let i = 1; i < length; i++) {
 			yield between;
-			yield* generator(nodes[i], nextAncestors, options);
+			yield* generator(nodes[i], options, nextAncestors);
 		}
 	}
 
 	function* gen(key) {
-		yield* generator(node[key], nextAncestors, options);
+		yield* generator(node[key], options, nextAncestors);
 	}
 
 }

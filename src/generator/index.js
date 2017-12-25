@@ -311,7 +311,7 @@ function* generator(node, options, ancestors) {
 		yield reserved('}');
 		break;
 	case 'Program':
-		yield* array('body');
+		yield* array('body', reserved(';'));
 		break;
 	case 'Property':
 		if (node.kind !== 'init') {

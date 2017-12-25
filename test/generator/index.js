@@ -1,5 +1,4 @@
 const assert = require('assert');
-const console = require('console');
 const acorn = require('acorn');
 const test = require('@nlib/test');
 const types = require('../types');

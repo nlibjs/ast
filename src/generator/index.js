@@ -1,6 +1,5 @@
-const console = require('console');
 const isWeakOperator = require('../is-weak-operator');
-
+module.exports = generator;
 function* generator(node, options, ancestors) {
 	if (!node) {
 		return;
@@ -455,7 +454,6 @@ function* generator(node, options, ancestors) {
 		yield* gen('argument');
 		break;
 	default:
-		console.log(node);
 		throw new Error(`Unknown type: ${node.type}`);
 	}
 	yield getString('after');
@@ -489,7 +487,4 @@ function* generator(node, options, ancestors) {
 	function* gen(key) {
 		yield* generator(node[key], options, nextAncestors);
 	}
-
 }
-
-module.exports = generator;

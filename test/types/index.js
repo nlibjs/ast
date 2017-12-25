@@ -1,5 +1,4 @@
 const {base} = require('acorn/dist/walk');
-
 const groups = new Set([
 	'Class',
 	'Expression',
@@ -12,7 +11,6 @@ const groups = new Set([
 	'Statement',
 	'VariablePattern',
 ]);
-
 module.exports = [
 	...Object.keys(base),
 	'ClassBody',

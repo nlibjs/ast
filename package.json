@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@nlib/lint": "^2.2.1",
+    "@nlib/test": "^1.2.1",
     "acorn": "^5.2.1"
-  },
-  "dependencies": {}
+  }
 }

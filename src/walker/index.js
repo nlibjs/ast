@@ -1,3 +1,4 @@
+module.exports = walker;
 function* walker(node, options, ancestors) {
 	if (!node) {
 		return;
@@ -190,5 +191,3 @@ function* arrayWalker(nodes, options, nextAncestors) {
 		yield* walker(node, options, nextAncestors);
 	}
 }
-
-module.exports = walker;

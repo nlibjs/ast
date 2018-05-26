@@ -1,4 +1,4 @@
-module.exports = {
+exports.generatorTests = {
 	others: [
 		[
 			'0+1',

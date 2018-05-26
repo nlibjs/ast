@@ -11,14 +11,12 @@ const groups = new Set([
 	'Statement',
 	'VariablePattern',
 ]);
-module.exports = [
+exports.types = [
 	...Object.keys(base),
 	'ClassBody',
 	'ExportSpecifier',
 	'SwitchCase',
 	'TemplateElement',
 ]
-.filter((type) => {
-	return !groups.has(type);
-})
+.filter((type) => !groups.has(type))
 .sort();

@@ -1,18 +1,13 @@
 const assert = require('assert');
 const acorn = require('acorn');
 const test = require('@nlib/test');
-const types = require('../types');
-const walkerTests = require('../walker-tests');
+const {types} = require('../types');
+const {walkerTests} = require('../walker-tests');
 const {walker} = require('../..');
 
 test('walker', (test) => {
 
-	const coverage = new Map(
-		types
-		.map((type) => {
-			return [type, 0];
-		})
-	);
+	const coverage = new Map(types.map((type) => [type, 0]));
 
 	test('valid', (test) => {
 		for (const [code, expectedNodes, options] of walkerTests.valid) {

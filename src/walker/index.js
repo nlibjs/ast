@@ -1,5 +1,6 @@
-module.exports = walker;
-function* walker(node, options, ancestors) {
+exports.walker = walker;
+
+function* walker(node, options = {}, ancestors = []) {
 	if (!node) {
 		return;
 	}

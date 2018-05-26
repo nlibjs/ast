@@ -1,4 +1,4 @@
-module.exports = {
+exports.precedences = {
 	'||': 5,
 	'&&': 6,
 	'|': 7,

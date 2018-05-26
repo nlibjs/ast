@@ -1,13 +1,8 @@
-const walker = require('./walker');
-exports.walker = function* (node, options = {}) {
-	yield* walker(node, options, []);
-};
-
-const generator = require('./generator');
-const defaultGeneratorOptions = require('./default-generator-options');
-exports.generator = function* (node, options = {}) {
-	for (const key of Object.keys(defaultGeneratorOptions)) {
-		options[key] = Object.assign({}, defaultGeneratorOptions[key], options[key]);
-	}
-	yield* generator(node, options, []);
-};
+Object.assign(
+	exports,
+	require('./default-generator-options'),
+	require('./generator'),
+	require('./is-weak-operator'),
+	require('./precedences'),
+	require('./walker')
+);

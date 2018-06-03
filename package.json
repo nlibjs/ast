@@ -12,7 +12,7 @@
 	},
 	"license": "MIT",
 	"engines": {
-		"node": ">=6"
+		"node": ">=8"
 	},
 	"repository": "nlibjs/ast",
 	"main": "src/index.js",

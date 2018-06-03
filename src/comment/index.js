@@ -48,7 +48,7 @@ function parseComments(code, ast, arrayOfComments) {
 	const comments = [];
 	let previousEnd = 0;
 	let buffer;
-	const flush = (start) => {
+	const flush = (start = previousEnd) => {
 		if (buffer && 0 < buffer.length) {
 			const {start, end} = buffer;
 			const data = parseComment(buffer.join('\n'));

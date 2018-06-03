@@ -174,10 +174,17 @@ t.test('parseComments', (t) => {
 				sourceType: 'module',
 				onComment: comments,
 			});
-			t.match(
-				parseComments(item.code, ast, comments),
-				item.comments
-			);
+			const actual = parseComments(item.code, ast, comments);
+			t.test('start and end', (t) => {
+				let previousEnd = 0;
+				for (const {start, end} of actual) {
+					t.ok(previousEnd <= start);
+					t.ok(start < end);
+					previousEnd = end;
+				}
+				t.end();
+			});
+			t.match(actual, item.comments);
 			t.end();
 		});
 	}

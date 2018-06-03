@@ -1,17 +1,14 @@
-const assert = require('assert');
 const acorn = require('acorn');
-const test = require('@nlib/test');
+const t = require('tap');
 const {types} = require('../types');
 const {generatorTests} = require('../generator-tests');
 const {generator, walker} = require('../..');
 
-test('generator', (test) => {
-
+t.test('generator', (t) => {
 	const coverage = new Map(types.map((type) => [type, 0]));
-
-	test('valid', (test) => {
+	t.test('valid', (t) => {
 		for (const [code, acornOptions = {}] of generatorTests.simple) {
-			test(JSON.stringify(code), () => {
+			t.test(JSON.stringify(code), (t) => {
 				const ast = acorn.parse(code, Object.assign(
 					{ecmaVersion: 8, sourceType: 'module'},
 					acornOptions
@@ -24,12 +21,12 @@ test('generator', (test) => {
 					fragments.push(fragment);
 				}
 				const actual = fragments.join('');
-				assert.equal(actual, code);
+				t.equal(actual, code);
+				t.end();
 			});
 		}
-
 		for (const [code, options, expected, acornOptions = {}] of generatorTests.others) {
-			test(JSON.stringify(code), () => {
+			t.test(JSON.stringify(code), (t) => {
 				const ast = acorn.parse(code, Object.assign(
 					{ecmaVersion: 8, sourceType: 'module'},
 					acornOptions
@@ -42,30 +39,34 @@ test('generator', (test) => {
 					fragments.push(fragment);
 				}
 				const actual = fragments.join('');
-				assert.equal(actual, expected);
+				t.equal(actual, expected);
+				t.end();
 			});
 		}
+		t.end();
 	});
-
-	test('invalid', (test) => {
+	t.test('invalid', (t) => {
 		for (const [node, options = {}] of generatorTests.invalid) {
-			test(JSON.stringify(node), () => {
+			t.test(JSON.stringify(node), (t) => {
 				const fragments = [];
-				assert.throws(() => {
+				t.throws(() => {
 					for (const fragment of generator(node, options)) {
 						fragments.push(fragment);
 					}
 				});
+				t.end();
 			});
 		}
+		t.end();
 	});
-
-	test('coverage', (test) => {
+	t.test('coverage', (t) => {
 		for (const [type, count] of coverage) {
-			test(`${type}: ${count}`, () => {
-				assert(0 < count, `${type} is not covered`);
+			t.test(`${type}: ${count}`, (t) => {
+				t.ok(0 < count, `${type} is not covered`);
+				t.end();
 			});
 		}
+		t.end();
 	});
-
+	t.end();
 });

@@ -4,5 +4,6 @@ Object.assign(
 	require('./generator'),
 	require('./is-weak-operator'),
 	require('./precedences'),
+	require('./comment'),
 	require('./walker')
 );

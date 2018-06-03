@@ -1,4 +1,4 @@
-const test = require('@nlib/test');
+const t = require('tap');
 const acorn = require('acorn');
 const {
 	uncommenter,
@@ -68,46 +68,46 @@ const items = [
 	},
 ];
 
-test('uncommenter', (test) => {
-
+t.test('uncommenter', (t) => {
 	for (const item of items) {
-		test(JSON.stringify(item.text), (test) => {
-			test.compare(
+		t.test(JSON.stringify(item.text), (t) => {
+			t.match(
 				[...uncommenter(item.text)],
 				item.uncommenter
 			);
+			t.end();
 		});
 	}
-
+	t.end();
 });
 
-test('commentTokenizer', (test) => {
-
+t.test('commentTokenizer', (t) => {
 	for (const item of items) {
-		test(JSON.stringify(item.text), (test) => {
-			test.compare(
+		t.test(JSON.stringify(item.text), (t) => {
+			t.match(
 				[...commentTokenizer(item.text)],
 				item.commentTokenizer
 			);
+			t.end();
 		});
 	}
-
+	t.end();
 });
 
-test('parseComment', (test) => {
-
+t.test('parseComment', (t) => {
 	for (const item of items) {
-		test(JSON.stringify(item.text), (test) => {
-			test.compare(
+		t.test(JSON.stringify(item.text), (t) => {
+			t.match(
 				parseComment(item.text),
 				item.parseComment
 			);
+			t.end();
 		});
 	}
-
+	t.end();
 });
 
-test('parseComments', (test) => {
+t.test('parseComments', (t) => {
 
 	const items = [
 		{
@@ -167,19 +167,19 @@ test('parseComments', (test) => {
 			},
 		},
 	];
-
 	for (const item of items) {
-		test(JSON.stringify(item.text), (test) => {
+		t.test(JSON.stringify(item.text), (t) => {
 			const comments = [];
 			const ast = acorn.parse(item.code, {
 				sourceType: 'module',
 				onComment: comments,
 			});
-			test.compare(
+			t.match(
 				parseComments(item.code, ast, comments),
 				item.comments
 			);
+			t.end();
 		});
 	}
-
+	t.end();
 });

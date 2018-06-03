@@ -1,17 +1,14 @@
-const assert = require('assert');
 const acorn = require('acorn');
-const test = require('@nlib/test');
+const t = require('tap');
 const {types} = require('../types');
 const {walkerTests} = require('../walker-tests');
 const {walker} = require('../..');
 
-test('walker', (test) => {
-
+t.test('walker', (t) => {
 	const coverage = new Map(types.map((type) => [type, 0]));
-
-	test('valid', (test) => {
+	t.test('valid', (t) => {
 		for (const [code, expectedNodes, options] of walkerTests.valid) {
-			test(JSON.stringify(code), () => {
+			t.test(JSON.stringify(code), (t) => {
 				const ast = acorn.parse(
 					code,
 					Object.assign(
@@ -29,30 +26,32 @@ test('walker', (test) => {
 						const {type} = node;
 						coverage.set(type, coverage.get(type) + 1);
 						for (const key of Object.keys(expected)) {
-							assert.deepEqual(node[key], expected[key]);
+							t.deepEqual(node[key], expected[key]);
 						}
 					} else {
-						assert.equal(node, expected);
+						t.equal(node, expected);
 					}
 				}
+				t.end();
 			});
 		}
+		t.end();
 	});
-
-	test('invalid', (test) => {
+	t.test('invalid', (t) => {
 		for (const ast of walkerTests.invalid) {
-			test(JSON.stringify(ast), () => {
-				assert.throws(() => {
+			t.test(JSON.stringify(ast), (t) => {
+				t.throws(() => {
 					const nodes = [];
 					for (const node of walker(ast)) {
 						nodes.push(node);
 					}
 				});
+				t.end();
 			});
 		}
+		t.end();
 	});
-
-	test('filter', () => {
+	t.test('filter', (t) => {
 		for (const node of walker(
 			{type: 'Literal'},
 			{
@@ -62,15 +61,18 @@ test('walker', (test) => {
 				},
 			}
 		)) {
-			assert.equal(node.foo, 'foo');
+			t.equal(node.foo, 'foo');
 		}
+		t.end();
 	});
-
-	test('coverage', (test) => {
+	t.test('coverage', (t) => {
 		for (const [type, count] of coverage) {
-			test(`${type}: ${count}`, () => {
-				assert(0 < count, `${type} is not covered`);
+			t.test(`${type}: ${count}`, (t) => {
+				t.ok(0 < count, `${type} is not covered`);
+				t.end();
 			});
 		}
+		t.end();
 	});
+	t.end();
 });

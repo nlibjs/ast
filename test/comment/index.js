@@ -168,7 +168,7 @@ t.test('parseComments', (t) => {
 		},
 	];
 	for (const item of items) {
-		t.test(JSON.stringify(item.text), (t) => {
+		t.test(JSON.stringify(item.code), (t) => {
 			const comments = [];
 			const ast = acorn.parse(item.code, {
 				sourceType: 'module',

@@ -1,9 +1,12 @@
 Object.assign(
 	exports,
-	require('./default-generator-options'),
-	require('./generator'),
-	require('./is-weak-operator'),
-	require('./precedences'),
-	require('./comment'),
-	require('./walker')
+	require('./types/index.js'),
+	require('./default-generator-options/index.js'),
+	require('./generator/index.js'),
+	require('./is-weak-operator/index.js'),
+	require('./precedences/index.js'),
+	require('./walker/index.js'),
+	require('./comment/index.js'),
+	require('./print/index.js'),
+	require('./analyze/index.js')
 );

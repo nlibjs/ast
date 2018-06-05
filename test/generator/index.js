@@ -1,8 +1,7 @@
 const acorn = require('acorn');
 const t = require('tap');
-const {types} = require('../types');
 const {generatorTests} = require('../generator-tests');
-const {generator, walker} = require('../..');
+const {types, generator, walker} = require('../..');
 
 t.test('generator', (t) => {
 	const coverage = new Map(types.map((type) => [type, 0]));

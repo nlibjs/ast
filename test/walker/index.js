@@ -1,8 +1,7 @@
 const acorn = require('acorn');
 const t = require('tap');
-const {types} = require('../types');
 const {walkerTests} = require('../walker-tests');
-const {walker} = require('../..');
+const {types, walker} = require('../..');
 
 t.test('walker', (t) => {
 	const coverage = new Map(types.map((type) => [type, 0]));

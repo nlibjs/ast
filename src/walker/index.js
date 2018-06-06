@@ -1,6 +1,4 @@
-exports.walker = walker;
-
-function* walker(node, options = {}, ancestors = []) {
+const walker = function* (node, options = {}, ancestors = []) {
 	if (!node) {
 		return;
 	}
@@ -185,10 +183,12 @@ function* walker(node, options = {}, ancestors = []) {
 	default:
 		throw new Error(`Unknown type: ${node.type}`);
 	}
-}
+};
 
-function* arrayWalker(nodes, options, nextAncestors) {
+const arrayWalker = function* (nodes, options, nextAncestors) {
 	for (const node of nodes) {
 		yield* walker(node, options, nextAncestors);
 	}
-}
+};
+
+exports.walker = walker;

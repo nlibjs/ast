@@ -29,11 +29,14 @@ const printOnFail = (t, code, ast) => {
 
 
 t.test('analyze', (t) => {
+
 	const notCovered = new Set(types);
+
 	t.test('variable', (t) => {
 		const code = `
 		const foo = [!1 & 2 ? 3 : \`\${4 && (5 + 6)}\`, ...[]], bar = baz = 'baz';
-		foo = '';
+		[foo] = [''];
+		({foo}) = [], {};
 		`;
 		const ast = getAST(notCovered, code);
 		t.equal(ast.scope.size, 3);
@@ -55,11 +58,14 @@ t.test('analyze', (t) => {
 		t.end();
 		printOnFail(t, code, ast);
 	});
-	t.test('function', (t) => {
+
+	t.test('FunctionDeclaration', (t) => {
 		const code = `
-		function foo(foo1, foo2 = foo3, ...foo4) {
+		function* foo(foo1, foo2 = foo3, ...foo4) {
 			const foo5 = 'foo5';
+			yield this;
 		}
+		foo(...[1, 2, 3]);
 		`;
 		const ast = getAST(notCovered, code);
 		t.equal(ast.scope.size, 2);
@@ -89,7 +95,140 @@ t.test('analyze', (t) => {
 		t.end();
 		printOnFail(t, code, ast);
 	});
-	t.equal(notCovered.size, 0, [...notCovered].join(','));
+
+	t.test('FunctionExpression', (t) => {
+		const code = `
+		const foo = async function (foo1, foo2 = foo3, ...foo4) {
+			const foo5 = await 'foo5';
+		}
+		foo(...[1, 2, 3]);
+		`;
+		const ast = getAST(notCovered, code);
+		t.equal(ast.scope.size, 2);
+		t.match(ast.scope.get('foo3'), {
+			declaration: undefined,
+		});
+		const foo = ast.scope.get('foo');
+		t.match(foo, {
+			declaration: {
+				type: 'VariableDeclarator',
+				init: {type: 'FunctionExpression'},
+			},
+		});
+		const functionScope = foo.declaration.init.body.scope;
+		t.equal(functionScope.size, 4);
+		t.match(functionScope.get('foo1'), {
+			declaration: {type: 'FunctionExpression'},
+		});
+		t.match(functionScope.get('foo2'), {
+			declaration: {type: 'FunctionExpression'},
+		});
+		t.match(functionScope.get('foo4'), {
+			declaration: {type: 'FunctionExpression'},
+		});
+		t.match(functionScope.get('foo5'), {
+			declaration: {type: 'VariableDeclarator'},
+		});
+		t.end();
+		printOnFail(t, code, ast);
+	});
+
+	t.test('ArrowFunctionExpression', (t) => {
+		const code = `
+		const foo = (foo1, foo2 = foo3, ...foo4) => {
+			const foo5 = 'foo5';
+		}
+		foo(...[1, 2, 3]);
+		`;
+		const ast = getAST(notCovered, code);
+		t.equal(ast.scope.size, 2);
+		t.match(ast.scope.get('foo3'), {
+			declaration: undefined,
+		});
+		const foo = ast.scope.get('foo');
+		t.match(foo, {
+			declaration: {
+				type: 'VariableDeclarator',
+				init: {type: 'ArrowFunctionExpression'},
+			},
+		});
+		const functionScope = foo.declaration.init.body.scope;
+		t.equal(functionScope.size, 4);
+		t.match(functionScope.get('foo1'), {
+			declaration: {type: 'ArrowFunctionExpression'},
+		});
+		t.match(functionScope.get('foo2'), {
+			declaration: {type: 'ArrowFunctionExpression'},
+		});
+		t.match(functionScope.get('foo4'), {
+			declaration: {type: 'ArrowFunctionExpression'},
+		});
+		t.match(functionScope.get('foo5'), {
+			declaration: {type: 'VariableDeclarator'},
+		});
+		t.end();
+		printOnFail(t, code, ast);
+	});
+
+	t.test('ForXXStatement', (t) => {
+		const code = `
+		for (let key = 0; key < 10; key++) {
+			const foo = key;
+		}
+		const foo = [];
+		for (let key in foo) {
+			const foo = key;
+		}
+		for (let key of foo) {
+			const foo = key;
+		}
+		`;
+		const ast = getAST(notCovered, code);
+		t.equal(ast.body.length, 4);
+		t.equal(ast.scope.size, 1);
+		t.match(ast.scope.get('foo'), {
+			declaration: 'VariableDeclarator',
+		});
+		t.test('ForStatement', (t) => {
+			const [forStatement] = ast.body;
+			t.equal(forStatement.body.scope.size, 2);
+			t.match(forStatement.body.scope.get('key'), {
+				declaration: {type: 'ForStatement'},
+			});
+			t.match(forStatement.body.scope.get('foo'), {
+				declaration: {type: 'VariableDeclarator'},
+			});
+			t.end();
+		});
+		t.test('ForInStatement', (t) => {
+			const [,, forInStatement] = ast.body;
+			t.equal(forInStatement.body.scope.size, 2);
+			t.match(forInStatement.body.scope.get('key'), {
+				declaration: {type: 'ForStatement'},
+			});
+			t.match(forInStatement.body.scope.get('foo'), {
+				declaration: {type: 'VariableDeclarator'},
+			});
+			t.end();
+		});
+		t.test('ForOfStatement', (t) => {
+			const [,,, forOfStatement] = ast.body;
+			t.equal(forOfStatement.body.scope.size, 2);
+			t.match(forOfStatement.body.scope.get('key'), {
+				declaration: {type: 'ForStatement'},
+			});
+			t.match(forOfStatement.body.scope.get('foo'), {
+				declaration: {type: 'VariableDeclarator'},
+			});
+			t.end();
+		});
+		t.end();
+		printOnFail(t, code, ast);
+	});
+
+	console.log([...notCovered].join(','));
+
+	// t.equal(notCovered.size, 0, [...notCovered].join(','));
 	t.end();
 	// const items = [
 	// 	{

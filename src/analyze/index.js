@@ -73,10 +73,16 @@ const analyze = (ast) => {
 				node.scope = new Map();
 				break;
 			case 'ForStatement':
+				node.body.scope = new Map();
+				addToScope(node.body.scope, node.init);
+				addToScope(node.body.scope, node.test);
+				addToScope(node.body.scope, node.update);
+				break;
 			case 'ForInStatement':
 			case 'ForOfStatement':
 				addToParent(node, node.right);
-				node.scope = new Map();
+				node.body.scope = new Map();
+				addToScope(node.body.scope, node.left);
 				break;
 			case 'VariableDeclarator':
 				node.id.declaration = node;

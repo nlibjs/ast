@@ -2,6 +2,7 @@ const t = require('tap');
 const acorn = require('acorn');
 const console = require('console');
 const chalk = require('chalk');
+const {removeIndent} = require('@nlib/util');
 const {types, analyze, walker, print} = require('../..');
 const getAST = (notCovered, code, options) => {
 	const ast = acorn.parse(code, Object.assign({
@@ -17,16 +18,11 @@ const getAST = (notCovered, code, options) => {
 const printOnFail = (t, code, ast) => {
 	if (0 < t.results.fail) {
 		console.log(chalk.dim('------ code ------'));
-		console.log(
-			code.trim().split('\n')
-			.map((line) => line.trim())
-			.join('\n')
-		);
+		console.log(removeIndent(code));
 		console.log(chalk.dim('------ ast ------'));
 		console.log(print(ast));
 	}
 };
-
 
 t.test('analyze', (t) => {
 
@@ -170,61 +166,81 @@ t.test('analyze', (t) => {
 		printOnFail(t, code, ast);
 	});
 
-	t.test('ForXXStatement', (t) => {
+	t.test('ForStatement', (t) => {
 		const code = `
 		for (let key = 0; key < 10; key++) {
 			const foo = key;
 		}
-		const foo = [];
-		for (let key in foo) {
-			const foo = key;
-		}
-		for (let key of foo) {
-			const foo = key;
-		}
 		`;
 		const ast = getAST(notCovered, code);
-		t.equal(ast.body.length, 4);
-		t.equal(ast.scope.size, 1);
-		t.match(ast.scope.get('foo'), {
-			declaration: 'VariableDeclarator',
+		t.equal(ast.scope.size, 0);
+		const forStatementScope = ast.body[0].body.scope;
+		t.equal(forStatementScope.size, 2);
+		t.match(forStatementScope.get('key'), {
+			declaration: {type: 'ForStatement'},
 		});
-		t.test('ForStatement', (t) => {
-			const [forStatement] = ast.body;
-			t.equal(forStatement.body.scope.size, 2);
-			t.match(forStatement.body.scope.get('key'), {
-				declaration: {type: 'ForStatement'},
-			});
-			t.match(forStatement.body.scope.get('foo'), {
-				declaration: {type: 'VariableDeclarator'},
-			});
-			t.end();
-		});
-		t.test('ForInStatement', (t) => {
-			const [,, forInStatement] = ast.body;
-			t.equal(forInStatement.body.scope.size, 2);
-			t.match(forInStatement.body.scope.get('key'), {
-				declaration: {type: 'ForStatement'},
-			});
-			t.match(forInStatement.body.scope.get('foo'), {
-				declaration: {type: 'VariableDeclarator'},
-			});
-			t.end();
-		});
-		t.test('ForOfStatement', (t) => {
-			const [,,, forOfStatement] = ast.body;
-			t.equal(forOfStatement.body.scope.size, 2);
-			t.match(forOfStatement.body.scope.get('key'), {
-				declaration: {type: 'ForStatement'},
-			});
-			t.match(forOfStatement.body.scope.get('foo'), {
-				declaration: {type: 'VariableDeclarator'},
-			});
-			t.end();
+		t.match(forStatementScope.get('foo'), {
+			declaration: {type: 'VariableDeclarator'},
 		});
 		t.end();
 		printOnFail(t, code, ast);
 	});
+
+	// t.test('ForXXStatement', (t) => {
+	// 	const code = `
+	// 	for (let key = 0; key < 10; key++) {
+	// 		const foo = key;
+	// 	}
+	// 	const foo = [];
+	// 	for (let key in foo) {
+	// 		const foo = key;
+	// 	}
+	// 	for (let key of foo) {
+	// 		const foo = key;
+	// 	}
+	// 	`;
+	// 	const ast = getAST(notCovered, code);
+	// 	t.equal(ast.body.length, 4);
+	// 	t.equal(ast.scope.size, 1);
+	// 	t.match(ast.scope.get('foo'), {
+	// 		declaration: {type: 'VariableDeclarator'},
+	// 	});
+	// 	t.test('ForStatement', (t) => {
+	// 		const [forStatement] = ast.body;
+	// 		t.equal(forStatement.body.scope.size, 2);
+	// 		t.match(forStatement.body.scope.get('key'), {
+	// 			declaration: {type: 'ForStatement'},
+	// 		});
+	// 		// t.match(forStatement.body.scope.get('foo'), {
+	// 		// 	declaration: {type: 'VariableDeclarator'},
+	// 		// });
+	// 		t.end();
+	// 	});
+	// 	// t.test('ForInStatement', (t) => {
+	// 	// 	const [,, forInStatement] = ast.body;
+	// 	// 	t.equal(forInStatement.body.scope.size, 2);
+	// 	// 	t.match(forInStatement.body.scope.get('key'), {
+	// 	// 		declaration: {type: 'ForStatement'},
+	// 	// 	});
+	// 	// 	t.match(forInStatement.body.scope.get('foo'), {
+	// 	// 		declaration: {type: 'VariableDeclarator'},
+	// 	// 	});
+	// 	// 	t.end();
+	// 	// });
+	// 	// t.test('ForOfStatement', (t) => {
+	// 	// 	const [,,, forOfStatement] = ast.body;
+	// 	// 	t.equal(forOfStatement.body.scope.size, 2);
+	// 	// 	t.match(forOfStatement.body.scope.get('key'), {
+	// 	// 		declaration: {type: 'ForStatement'},
+	// 	// 	});
+	// 	// 	t.match(forOfStatement.body.scope.get('foo'), {
+	// 	// 		declaration: {type: 'VariableDeclarator'},
+	// 	// 	});
+	// 	// 	t.end();
+	// 	// });
+	// 	t.end();
+	// 	printOnFail(t, code, ast);
+	// });
 
 	console.log([...notCovered].join(','));
 

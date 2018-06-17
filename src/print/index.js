@@ -15,6 +15,15 @@ const print = (ast) => {
 		if (node.name) {
 			line += `: ${chalk.cyan(node.name)}`;
 		}
+		if (node.type === 'Identifier') {
+			if (node.declaration) {
+				line += ' declared at ';
+				line += chalk.dim(`@${node.declaration.type}`);
+				line += chalk.yellow(`(${node.declaration.uid})`);
+			} else {
+				line += ` ${chalk.red('undefined')}`;
+			}
+		}
 		if (node.operator) {
 			line += `: ${chalk.cyan(node.operator)}`;
 		}

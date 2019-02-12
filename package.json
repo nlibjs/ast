@@ -21,9 +21,9 @@
 		"test": "tap --coverage test/comment test/generator test/walker"
 	},
 	"devDependencies": {
-		"@nlib/lint": "^3.0.1",
-		"acorn": "^5.6.1",
+		"@nlib/lint": "^3.3.3",
+		"acorn": "^5.7.3",
 		"eslint": "^4.19.1",
-		"tap": "^12.0.1"
+		"tap": "^12.5.2"
 	}
 }

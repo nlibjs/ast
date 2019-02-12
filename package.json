@@ -22,8 +22,20 @@
 	},
 	"devDependencies": {
 		"@nlib/lint": "^3.3.3",
-		"acorn": "^5.7.3",
-		"eslint": "^4.19.1",
+		"acorn": "^6.1.0",
+		"eslint": "^5.13.0",
 		"tap": "^12.5.2"
+	},
+	"eslintConfig": {
+		"extends": "./node_modules/@nlib/lint/.eslintrc.json",
+		"env": {
+			"es6": true,
+			"node": true
+        },
+        "rules": {
+            "func-style": "off",
+            "max-lines-per-function": "off",
+            "no-use-before-define": "off"
+        }
 	}
 }

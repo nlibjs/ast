@@ -192,9 +192,13 @@ exports.walkerTests = {
             ],
         ],
         [
-            'export {foo as bar}',
+            'const foo=0;export {foo as bar}',
             [
                 {type: 'Program'},
+                {type: 'VariableDeclaration', kind: 'const'},
+                {type: 'VariableDeclarator'},
+                {type: 'Identifier', name: 'foo'},
+                {type: 'Literal', value: 0},
                 {type: 'ExportNamedDeclaration'},
                 {type: 'ExportSpecifier'},
                 {type: 'Identifier', name: 'foo'},

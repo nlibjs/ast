@@ -44,7 +44,7 @@ exports.generatorTests = {
         ['export default 0'],
         ['export let foo'],
         ['export let foo,bar=1'],
-        ['export {foo as bar,baz}'],
+        ['const foo=0,baz=1;export {foo as bar,baz}'],
         ['for(foo in 0){}'],
         ['for(foo of 0){}'],
         ['for(;;);'],

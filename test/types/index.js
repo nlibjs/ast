@@ -1,4 +1,4 @@
-const {base} = require('acorn/dist/walk');
+const {base} = require('acorn-walk');
 const groups = new Set([
     'Class',
     'Expression',
